@@ -19,10 +19,42 @@
 
 namespace RiotAPI\LeagueAPI\Exceptions;
 
+use RiotAPI\LeagueAPI\LeagueAPI;
 
 /**
  *   Class GeneralException
  *
  * @package RiotAPI\LeagueAPI\Exceptions
  */
-class GeneralException extends \Exception {}
+class GeneralException extends \Exception
+{
+    /**
+     * LeagueAPI instance.
+     *
+     * @var LeagueAPI
+     */
+    protected $api;
+
+    /**
+     * Set the LeagueAPI instance.
+     *
+     * @param  LeagueAPI $api
+     * @return $this
+     */
+    public function setApi($api)
+    {
+        $this->api = $api;
+
+        return $this;
+    }
+
+    /**
+     * Get the LeagueAPI instance.
+     *
+     * @return string
+     */
+    public function getApi()
+    {
+        return $this->api;
+    }
+}

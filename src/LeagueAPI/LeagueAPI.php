@@ -621,7 +621,7 @@ class LeagueAPI
 		$this->beforeCall[] = function () {
 			if ($this->getSetting(self::SET_CACHE_RATELIMIT) && $this->rlc != false)
 				if ($this->rlc->canCall($this->getSetting($this->used_key), $this->getSetting(self::SET_REGION), $this->getResource(), $this->getResourceEndpoint()) == false)
-					throw new ServerLimitException('API call rate limit would be exceeded by this call.');
+					throw (new ServerLimitException('API call rate limit would be exceeded by this call.'))->setApi($this);
 		};
 
 		$callbacks = $this->getSetting(self::SET_CALLBACKS_BEFORE, []);
@@ -1229,7 +1229,7 @@ class LeagueAPI
 			case 500:
 				throw new ServerException('LeagueAPI: Internal server error occured.', $response_code);
 			case 429:
-				throw new ServerLimitException("LeagueAPI: Rate limit for this API key was exceeded. $message", $response_code);
+				throw (new ServerLimitException("LeagueAPI: Rate limit for this API key was exceeded. $message", $response_code))->setApi($this);
 			case 415:
 				throw new UnsupportedMediaTypeException("LeagueAPI: Unsupported media type. $message", $response_code);
 			case 404:
@@ -1285,6 +1285,18 @@ class LeagueAPI
 			'response' => $this->result_data_raw,
 			'code'     => $this->result_code,
 		]));
+	}
+
+	/**
+	 * Get response
+	 */
+	public function getResponse()
+	{
+		return [
+			'headers'  => $this->result_headers,
+			'response' => $this->result_data_raw,
+			'code'     => $this->result_code,
+		];
 	}
 
 	/**
